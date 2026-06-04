@@ -407,7 +407,7 @@ function App() {
           ))}
         </div>
 
-       <DragDropContext onDragEnd={handleDragEnd}>
+          <DragDropContext onDragEnd={handleDragEnd}>
   <Droppable droppableId="todos">
     {(provided) => (
       <div
@@ -437,12 +437,12 @@ function App() {
                       ⋮⋮
                     </span>
 
-                    {/* Checkbox */}
+                    {/* Checkbox - Smaller on mobile */}
                     <input
                       type="checkbox"
                       checked={todo.completed}
                       onChange={() => toggleTask(todo.id)}
-                      className="w-5 h-5 rounded flex-shrink-0"
+                      className="w-4 h-4 sm:w-5 sm:h-5 rounded flex-shrink-0"
                       style={{ accentColor: '#D96C92' }}
                     />
 
@@ -573,22 +573,7 @@ function App() {
         </div>
         
         {/* Mobile Hint Bar - Only shows on small screens */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-pink-100 p-2 sm:hidden z-20">
-          <div className="flex justify-around text-xs text-pink-600">
-            <span className="flex items-center gap-1">
-              <kbd className="px-1 bg-gray-100 rounded text-[10px]">⌘</kbd>+<kbd className="px-1 bg-gray-100 rounded text-[10px]">⏎</kbd> Add
-            </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1 bg-gray-100 rounded text-[10px]">⌘</kbd>+<kbd className="px-1 bg-gray-100 rounded text-[10px]">/</kbd> Search
-            </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1 bg-gray-100 rounded text-[10px]">⌘</kbd>+<kbd className="px-1 bg-gray-100 rounded text-[10px]">D</kbd> Task
-            </span>
-            <button onClick={() => alert('⌨️ Shortcuts:\n\n• Ctrl/Cmd + Enter → Add task\n• Esc → Cancel editing\n• Ctrl/Cmd + / → Focus search\n• Ctrl/Cmd + D → Focus add task')} className="text-pink-600">
-              ⌨️ More
-            </button>
-          </div>
-        </div>
+       
       </div>
     </div>
   );
