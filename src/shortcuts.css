@@ -33,3 +33,25 @@ kbd {
 .fixed.bottom-4.right-4 button:hover {
   animation: none;
 }
+/* Force checkboxes to be smaller on mobile */
+@media (max-width: 640px) {
+  input[type="checkbox"] {
+    width: 14px !important;
+    height: 14px !important;
+    transform: scale(0.9);
+  }
+}
+
+/* For Webkit browsers (Chrome, Safari) */
+input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+}
+
+@media (min-width: 641px) {
+  input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    transform: scale(1);
+  }
+}
