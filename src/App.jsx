@@ -1,5 +1,6 @@
 import { useState, useEffect,useRef } from "react";
 import './shortcuts.css';
+import { Edit2, Trash2, Save, Calendar, Flag, GripVertical } from "lucide-react";
 import {
   PieChart,
   Pie,
@@ -406,121 +407,155 @@ function App() {
           ))}
         </div>
 
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="todos">
+       <DragDropContext onDragEnd={handleDragEnd}>
+  <Droppable droppableId="todos">
+    {(provided) => (
+      <div
+        {...provided.droppableProps}
+        ref={provided.innerRef}
+        className="space-y-4"
+      >
+        {filteredTodos.map((todo, index) => (
+          <Draggable
+            key={todo.id}
+            draggableId={String(todo.id)}
+            index={index}
+          >
             {(provided) => (
               <div
-                {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="space-y-4"
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                className="bg-[#FFF4F7] p-3 rounded-2xl border border-pink-100 hover:shadow-md transition"
               >
-                {filteredTodos.map((todo, index) => (
-                  <Draggable
-                    key={todo.id}
-                    draggableId={String(todo.id)}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-[#FFF4F7] p-4 rounded-2xl border border-pink-100 hover:shadow-md transition gap-3"
+                {/* Main row - everything in one line on mobile */}
+                <div className="flex items-center justify-between gap-2">
+                  {/* Left section: Drag handle + Checkbox + Task text */}
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    {/* Drag Handle */}
+                    <span className="text-pink-400 cursor-grab text-xl flex-shrink-0">
+                      ⋮⋮
+                    </span>
+
+                    {/* Checkbox */}
+                    <input
+                      type="checkbox"
+                      checked={todo.completed}
+                      onChange={() => toggleTask(todo.id)}
+                      className="w-5 h-5 rounded flex-shrink-0"
+                      style={{ accentColor: '#D96C92' }}
+                    />
+
+                    {/* Task Text */}
+                    {editingId === todo.id ? (
+                      <input
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                        className="border border-pink-200 rounded px-2 py-1 flex-1 min-w-0"
+                        autoFocus
+                      />
+                    ) : (
+                      <span
+                        className={`truncate ${
+                          todo.completed
+                            ? "line-through text-pink-300"
+                            : "text-[#5B4B53]"
+                        }`}
                       >
-                        <div className="flex items-center gap-3">
-                          <span className="text-pink-400 cursor-grab">
-                            ☰
-                          </span>
+                        {todo.text}
+                      </span>
+                    )}
+                  </div>
 
-                          <input
-                            type="checkbox"
-                            checked={todo.completed}
-                            onChange={() => toggleTask(todo.id)}
-                          />
+                  {/* Right section: Edit + Delete buttons (pink theme) */}
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    {editingId === todo.id ? (
+                      <button
+                        onClick={saveEdit}
+                        className="text-green-500 hover:text-green-600 p-2 rounded-lg hover:bg-green-50 transition-colors"
+                        title="Save"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                          <polyline points="17 21 17 13 7 13 7 21"/>
+                          <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => startEdit(todo)}
+                          className="text-[#D96C92] hover:text-[#b84d6f] p-2 rounded-lg hover:bg-pink-50 transition-colors"
+                          title="Edit"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M17 3l4 4-7 7H10v-4l7-7z"/>
+                            <path d="M4 20h16"/>
+                          </svg>
+                        </button>
 
-                          <div>
-                            {editingId === todo.id ? (
-                              <input
-                                value={editText}
-                                onChange={(e) =>
-                                  setEditText(e.target.value)
-                                }
-                                className="border rounded px-2 py-1"
-                              />
-                            ) : (
-                              <span
-                                className={`break-words ${
-                                  todo.completed
-                                    ? "line-through text-pink-300"
-                                    : "text-[#5B4B53]"
-                                }`}
-                              >
-                                {todo.text}
-                              </span>
-                            )}
+                        <button
+                          onClick={() => deleteTask(todo.id)}
+                          className="text-[#D96C92] hover:text-[#b84d6f] p-2 rounded-lg hover:bg-pink-50 transition-colors"
+                          title="Delete"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M3 6h18"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            <line x1="10" y1="11" x2="10" y2="17"/>
+                            <line x1="14" y1="11" x2="14" y2="17"/>
+                          </svg>
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
 
-                            <div className="flex gap-2 mt-2 flex-wrap">
-                              {todo.priority && todo.priority !== "None" && (
-                                <span
-                                  className={`text-xs px-2 py-1 rounded-full ${getPriorityColor(
-                                    todo.priority
-                                  )}`}
-                                >
-                                  {todo.priority}
-                                </span>
-                              )}
-
-                              {todo.dueDate && (
-                                <span
-                                  className={`text-xs px-2 py-1 rounded-full ${
-                                    isOverdue(todo.dueDate)
-                                      ? "bg-red-500 text-white"
-                                      : "bg-pink-100 text-pink-700"
-                                  }`}
-                                >
-                                  {isOverdue(todo.dueDate)
-                                    ? "⚠ Overdue"
-                                    : todo.dueDate}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-wrap gap-2">
-                          {editingId === todo.id ? (
-                            <button
-                              onClick={saveEdit}
-                              className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm"
-                            >
-                              Save
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => startEdit(todo)}
-                              className="bg-[#D96C92] text-white px-3 py-1 rounded-lg text-sm"
-                            >
-                              Edit
-                            </button>
-                          )}
-
-                          <button
-                            onClick={() => deleteTask(todo.id)}
-                            className="bg-[#F48FB1] text-white px-3 py-1 rounded-lg text-sm"
-                          >
-                            Delete
-                          </button>
-                        </div>
+                {/* Priority & Due Date Row - shows below */}
+                {(todo.priority && todo.priority !== "None") || todo.dueDate ? (
+                  <div className="flex gap-2 mt-2 flex-wrap">
+                    {todo.priority && todo.priority !== "None" && (
+                      <div className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${getPriorityColor(todo.priority)}`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                          <line x1="4" y1="22" x2="4" y2="15"/>
+                        </svg>
+                        <span>{todo.priority}</span>
                       </div>
                     )}
-                  </Draggable>
-                ))}
 
-                {provided.placeholder}
+                    {todo.dueDate && (
+                      <div
+                        className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
+                          isOverdue(todo.dueDate)
+                            ? "bg-red-500 text-white"
+                            : "bg-pink-100 text-pink-700"
+                        }`}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                          <line x1="16" y1="2" x2="16" y2="6"/>
+                          <line x1="8" y1="2" x2="8" y2="6"/>
+                          <line x1="3" y1="10" x2="21" y2="10"/>
+                          <circle cx="12" cy="15" r="1"/>
+                          <circle cx="16" cy="15" r="1"/>
+                          <circle cx="8" cy="15" r="1"/>
+                        </svg>
+                        <span>{isOverdue(todo.dueDate) ? "Overdue" : todo.dueDate}</span>
+                      </div>
+                    )}
+                  </div>
+                ) : null}
               </div>
             )}
-          </Droppable>
-        </DragDropContext>
+          </Draggable>
+        ))}
+
+        {provided.placeholder}
+      </div>
+    )}
+  </Droppable>
+</DragDropContext>
                 
         {/* Floating Shortcuts Hint - Mobile Responsive */}
         <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-20">
