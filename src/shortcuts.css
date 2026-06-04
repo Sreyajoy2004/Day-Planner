@@ -1,0 +1,35 @@
+/* This works alongside Tailwind CSS - no conflicts! */
+@media (max-width: 640px) {
+  button, 
+  [role="button"],
+  input[type="checkbox"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  button:active {
+    transform: scale(0.97);
+    transition: transform 0.05s;
+  }
+}
+
+kbd {
+  font-family: monospace;
+  font-weight: bold;
+  padding: 2px 4px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+  display: inline-block;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.fixed.bottom-4.right-4 button {
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.fixed.bottom-4.right-4 button:hover {
+  animation: none;
+}
