@@ -449,7 +449,7 @@ function App() {
                       checked={todo.completed}
                       onChange={() => toggleTask(todo.id)}
                       className="w-3 h-3 sm:w-5 sm:h-5 rounded flex-shrink-0"
-                      style={{ accentColor: '#D96C92' }}
+                      style={{ accentColor: '#D96C92', transform: 'scale(0.8)' }}
                     />
 
                     {/* Task Text */}
