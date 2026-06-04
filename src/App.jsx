@@ -445,12 +445,18 @@ function App() {
 
                     {/* Checkbox - MUCH SMALLER on mobile */}
                     <input
-                      type="checkbox"
-                      checked={todo.completed}
-                      onChange={() => toggleTask(todo.id)}
-                      className="w-3 h-3 sm:w-5 sm:h-5 rounded flex-shrink-0"
-                      style={{ accentColor: '#D96C92', transform: 'scale(0.8)' }}
-                    />
+  type="checkbox"
+  checked={todo.completed}
+  onChange={() => toggleTask(todo.id)}
+  style={{ 
+    accentColor: '#D96C92',
+    width: '14px',
+    height: '14px',
+    minWidth: '14px',
+    minHeight: '14px'
+  }}
+  className="rounded flex-shrink-0"
+/>
 
                     {/* Task Text */}
                     {editingId === todo.id ? (
